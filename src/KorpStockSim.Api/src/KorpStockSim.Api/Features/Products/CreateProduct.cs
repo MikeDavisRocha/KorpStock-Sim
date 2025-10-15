@@ -16,7 +16,7 @@ public static class CreateProductEndpoint
         {
             var result = await sender.Send(command);
             // Retorna a URL para o novo recurso criado, uma boa prática de APIs REST.
-            return Results.Created($"/api/products/{result}", new { id = result });
+            return Results.CreatedAtRoute("GetProductById", new { id = result });
         })
         .WithName("CreateProduct")
         .WithTags("Products");

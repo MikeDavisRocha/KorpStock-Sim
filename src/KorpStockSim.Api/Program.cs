@@ -31,6 +31,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapCreateProductEndpoint();
+app.MapGetProductByIdEndpoint();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
