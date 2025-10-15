@@ -34,6 +34,7 @@ app.UseHttpsRedirection();
 app.MapCreateProductEndpoint();
 app.MapGetProductByIdEndpoint();
 app.MapListAllProductsEndpoint();
+app.MapUpdateProductEndpoint();
 
 app.UseAuthorization();
 app.MapControllers();

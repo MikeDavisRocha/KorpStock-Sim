@@ -17,7 +17,7 @@ public class Product
     public DateTime LastUpdated { get; private set; }
 
     // Construtor privado para ser usado pelo Entity Framework e pelo método de criação.
-    private Product() { } 
+    private Product() { }
 
     // Método de fábrica estático (Factory Method) para garantir que um produto
     // seja sempre criado em um estado válido.
@@ -32,5 +32,15 @@ public class Product
             QuantityInStock = initialStock,
             LastUpdated = DateTime.UtcNow
         };
+    }
+
+    public void Update(string sku, string name, string description, int quantityInStock)
+    {
+        // Aqui poderiam entrar validações (ex: quantityInStock não pode ser negativo)
+        Sku = sku;
+        Name = name;
+        Description = description;
+        QuantityInStock = quantityInStock;
+        LastUpdated = DateTime.UtcNow;
     }
 }
