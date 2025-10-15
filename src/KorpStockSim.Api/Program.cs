@@ -35,6 +35,7 @@ app.MapCreateProductEndpoint();
 app.MapGetProductByIdEndpoint();
 app.MapListAllProductsEndpoint();
 app.MapUpdateProductEndpoint();
+app.MapDeleteProductEndpoint();
 
 app.UseAuthorization();
 app.MapControllers();
