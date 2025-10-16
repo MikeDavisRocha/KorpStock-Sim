@@ -1,0 +1,30 @@
+<div class="container">
+  <h1>Cadastrar Novo Produto</h1>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label for="sku">SKU</label>
+      <input id="sku" type="text" formControlName="sku">
+    </div>
+
+    <div class="form-field">
+      <label for="name">Nome</label>
+      <input id="name" type="text" formControlName="name">
+    </div>
+
+    <div class="form-field">
+      <label for="description">Descrição</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="initialStock">Estoque Inicial</label>
+      <input id="initialStock" type="number" formControlName="initialStock">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="!productForm.valid">Salvar</button>
+      <a routerLink="/products">Cancelar</a>
+    </div>
+  </form>
+</div>
