@@ -1,0 +1,26 @@
+<div class="container">
+  <h1>Lista de Produtos</h1>
+
+  <div *ngIf="products.length === 0">
+    <p>Carregando produtos...</p>
+  </div>
+
+  <table *ngIf="products.length > 0">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Nome</th>
+        <th>Estoque</th>
+        <th>Última Atualização</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.sku }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.quantityInStock }}</td>
+        <td>{{ product.lastUpdated | date:'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
