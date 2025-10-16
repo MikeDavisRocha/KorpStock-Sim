@@ -12,10 +12,12 @@ export interface Product {
   lastUpdated: Date;
 }
 
+export type CreateProductDto = Omit<Product, 'id' | 'lastUpdated'>;
+
 @Injectable({
   providedIn: 'root'
 })
-// A classe continua se chamando ProductService, mesmo que o arquivo não tenha o sufixo.
+
 export class ProductService {
   private apiUrl = 'http://localhost:5141/api/products'; 
 
@@ -23,5 +25,9 @@ export class ProductService {
 
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl);
+  }
+  
+  createProduct(productData: CreateProductDto): Observable<Product> {
+    return this.http.post<Product>(this.apiUrl, productData);
   }
 }
