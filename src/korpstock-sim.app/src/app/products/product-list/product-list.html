@@ -13,6 +13,7 @@
         <th>Nome</th>
         <th>Estoque</th>
         <th>Última Atualização</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -21,6 +22,9 @@
         <td>{{ product.name }}</td>
         <td>{{ product.quantityInStock }}</td>
         <td>{{ product.lastUpdated | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>
+          <a [routerLink]="['/products/edit', product.id]" class="action-link">Editar</a>
+        </td>
       </tr>
     </tbody>
   </table>

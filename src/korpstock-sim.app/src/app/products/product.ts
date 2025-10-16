@@ -30,4 +30,14 @@ export class ProductService {
   createProduct(productData: CreateProductDto): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, productData);
   }
+
+  getProductById(id: string): Observable<Product> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<Product>(url);
+  }
+
+  updateProduct(id: string, productData: Product): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.put<void>(url, productData);
+  }
 }
