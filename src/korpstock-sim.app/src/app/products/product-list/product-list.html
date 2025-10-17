@@ -24,6 +24,7 @@
         <td>{{ product.lastUpdated | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>
           <a [routerLink]="['/products/edit', product.id]" class="action-link">Editar</a>
+          <button (click)="deleteProduct(product.id)" class="action-button delete">Excluir</button>
         </td>
       </tr>
     </tbody>

@@ -19,14 +19,14 @@ export type CreateProductDto = Omit<Product, 'id' | 'lastUpdated'>;
 })
 
 export class ProductService {
-  private apiUrl = 'http://localhost:5141/api/products'; 
+  private apiUrl = 'http://localhost:5141/api/products';
 
   constructor(private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl);
   }
-  
+
   createProduct(productData: CreateProductDto): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, productData);
   }
@@ -39,5 +39,11 @@ export class ProductService {
   updateProduct(id: string, productData: Product): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.put<void>(url, productData);
+  }
+
+  deleteProduct(id: string): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    // A API retorna 204 No Content, então o tipo de retorno é 'void'.
+    return this.http.delete<void>(url);
   }
 }
