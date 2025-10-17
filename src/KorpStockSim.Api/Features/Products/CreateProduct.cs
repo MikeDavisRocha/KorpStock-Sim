@@ -30,7 +30,7 @@ public static class CreateProduct
 {
     // Command: Representa os dados necessários para criar um produto.
     // É um DTO (Data Transfer Object) que vem do corpo da requisição.
-    public record Command(string Sku, string Name, string Description, int InitialStock) : IRequest<Guid>;
+    public record Command(string Sku, string Name, string Description, int QuantityInStock) : IRequest<Guid>;
 
     // Handler: Contém a lógica de negócio real.
     // Ele recebe o Command, interage com o banco de dados e retorna o resultado.
@@ -50,7 +50,7 @@ public static class CreateProduct
                 request.Sku,
                 request.Name,
                 request.Description,
-                request.InitialStock);
+                request.QuantityInStock);
 
             // 2. Adicionamos o novo produto ao DbContext.
             await _dbContext.Products.AddAsync(product, cancellationToken);
