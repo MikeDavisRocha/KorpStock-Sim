@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Product, ProductService } from '../product';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss'
 })
 export class ProductList {
+  displayedColumns: string[] = ['sku', 'name', 'quantityInStock', 'lastUpdated', 'actions'];
   // Propriedade para armazenar a lista de produtos que virá da API.
   products: Product[] = [];
 
