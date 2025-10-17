@@ -5,6 +5,11 @@
   margin-bottom: 20px;
 }
 
+.filter-field {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 mat-cell, mat-header-cell {
   // Centraliza o conteúdo da coluna de ações
   &.mat-column-actions {

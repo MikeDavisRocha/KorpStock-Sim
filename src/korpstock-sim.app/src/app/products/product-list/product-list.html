@@ -4,7 +4,12 @@
     <a mat-raised-button color="primary" routerLink="/products/new">Novo Produto</a>
   </div>
 
-  <mat-table [dataSource]="products" class="mat-elevation-z8">
+  <mat-form-field appearance="outline" class="filter-field">
+    <mat-label>Filtrar produtos...</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex: Parafuso">
+  </mat-form-field>
+
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="sku">
       <mat-header-cell *matHeaderCellDef> SKU </mat-header-cell>
