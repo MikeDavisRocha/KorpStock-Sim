@@ -1,30 +1,32 @@
 <div class="container">
   <h1>{{ isEditMode ? 'Editar Produto' : 'Cadastrar Novo Produto' }}</h1>
 
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <div class="form-field">
-      <label for="sku">SKU</label>
-      <input id="sku" type="text" formControlName="sku">
-    </div>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+    <mat-form-field appearance="outline">
+      <mat-label>SKU</mat-label>
+      <input matInput formControlName="sku" placeholder="Ex: PROD-001">
+    </mat-form-field>
 
-    <div class="form-field">
-      <label for="name">Nome</label>
-      <input id="name" type="text" formControlName="name">
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" placeholder="Ex: Parafuso Sextavado M12">
+    </mat-form-field>
 
-    <div class="form-field">
-      <label for="description">Descrição</label>
-      <textarea id="description" formControlName="description"></textarea>
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="description" placeholder="Ex: Parafuso de alta resistência..."></textarea>
+    </mat-form-field>
 
-    <div class="form-field">
-      <label for="quantityInStock">Estoque</label>
-      <input id="quantityInStock" type="number" formControlName="quantityInStock">
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Estoque</mat-label>
+      <input matInput type="number" formControlName="quantityInStock">
+    </mat-form-field>
 
     <div class="form-actions">
-      <button type="submit" [disabled]="!productForm.valid">Salvar</button>
-      <a routerLink="/products">Cancelar</a>
+      <a mat-stroked-button routerLink="/products">Cancelar</a>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!productForm.valid">
+        {{ isEditMode ? 'Salvar Alterações' : 'Salvar Produto' }}
+      </button>
     </div>
   </form>
 </div>
