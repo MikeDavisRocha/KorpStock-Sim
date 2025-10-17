@@ -1,32 +1,40 @@
 <div class="container">
-  <h1>Lista de Produtos</h1>
-  <a routerLink="/products/new" class="button">Novo Produto</a>
-
-  <div *ngIf="products.length === 0">
-    <p>Carregando produtos...</p>
+  <div class="header">
+    <h1>Lista de Produtos</h1>
+    <a mat-raised-button color="primary" routerLink="/products/new">Novo Produto</a>
   </div>
 
-  <table *ngIf="products.length > 0">
-    <thead>
-      <tr>
-        <th>SKU</th>
-        <th>Nome</th>
-        <th>Estoque</th>
-        <th>Última Atualização</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of products">
-        <td>{{ product.sku }}</td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.quantityInStock }}</td>
-        <td>{{ product.lastUpdated | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td>
-          <a [routerLink]="['/products/edit', product.id]" class="action-link">Editar</a>
-          <button (click)="deleteProduct(product.id)" class="action-button delete">Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <mat-table [dataSource]="products" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="sku">
+      <mat-header-cell *matHeaderCellDef> SKU </mat-header-cell>
+      <mat-cell *matCellDef="let product"> {{product.sku}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let product"> {{product.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="quantityInStock">
+      <mat-header-cell *matHeaderCellDef> Estoque </mat-header-cell>
+      <mat-cell *matCellDef="let product"> {{product.quantityInStock}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="lastUpdated">
+      <mat-header-cell *matHeaderCellDef> Última Atualização </mat-header-cell>
+      <mat-cell *matCellDef="let product"> {{product.lastUpdated | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let product">
+        <a mat-flat-button color="primary" [routerLink]="['/products/edit', product.id]">Editar</a>
+        <button mat-flat-button color="warn" (click)="deleteProduct(product.id)">Excluir</button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
 </div>

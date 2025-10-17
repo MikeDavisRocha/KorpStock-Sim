@@ -1,0 +1,18 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+mat-cell, mat-header-cell {
+  // Centraliza o conteúdo da coluna de ações
+  &.mat-column-actions {
+    justify-content: flex-end;
+  }
+}
+
+// Adiciona um espaço entre os botões de ação
+button, a[mat-button], a[mat-flat-button] {
+    margin-left: 8px;
+}
