@@ -1,0 +1,11 @@
+.product-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px; /* Adiciona um espaço entre os botões */
+  margin-top: 20px;
+}

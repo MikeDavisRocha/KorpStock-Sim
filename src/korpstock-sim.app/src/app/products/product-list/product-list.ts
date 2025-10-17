@@ -4,11 +4,13 @@ import { RouterModule } from '@angular/router';
 import { Product, ProductService } from '../product';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule],
+  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule,
+    MatSnackBarModule],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss'
 })
@@ -18,7 +20,10 @@ export class ProductList {
   products: Product[] = [];
 
   // 1. Injetamos o nosso serviço no construtor.
-  constructor(private productService: ProductService) { }
+  constructor(
+    private productService: ProductService,
+    private snackBar: MatSnackBar
+  ) { }
 
   // 2. ngOnInit é um "lifecycle hook", um método que o Angular chama
   //    automaticamente uma vez que o componente é inicializado.
@@ -30,21 +35,24 @@ export class ProductList {
     });
   }
 
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+    });
+  }
+
   deleteProduct(id: string): void {
-    // 1. Usa a janela de confirmação nativa do navegador.
     const confirmation = window.confirm('Você tem certeza que deseja excluir este produto?');
 
-    // 2. Se o usuário clicar em "OK", a variável será 'true'.
     if (confirmation) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
-          // 3. Em caso de sucesso, atualiza a UI instantaneamente.
-          //    Filtramos a lista, mantendo apenas os produtos cujo ID é DIFERENTE do que foi excluído.
           this.products = this.products.filter(product => product.id !== id);
-          console.log('Produto excluído com sucesso!');
+          this.openSnackBar('Produto excluído com sucesso!');
         },
         error: (err) => {
           console.error('Erro ao excluir produto:', err);
+          this.openSnackBar('Erro ao excluir produto.');
         }
       });
     }
