@@ -1,7 +1,8 @@
 using KorpStockSim.Api.Data;
+using KorpStockSim.Api.Shared; // Importe a PagedResult
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using static KorpStockSim.Api.Features.Products.GetProductById;
 
 namespace KorpStockSim.Api.Features.Products;
@@ -10,9 +11,14 @@ public static class ListAllProductsEndpoint
 {
     public static IEndpointRouteBuilder MapListAllProductsEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapGet("/api/products", async ([FromServices] ISender sender) =>
+        // O endpoint agora aceita parâmetros de query: filter, page, pageSize
+        builder.MapGet("/api/products", async (
+            [FromQuery] string? filter,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            [FromServices] ISender sender) =>
         {
-            var query = new ListAllProducts.Query();
+            var query = new ListAllProducts.Query(filter, page, pageSize);
             var result = await sender.Send(query);
             return Results.Ok(result);
         })
@@ -23,15 +29,12 @@ public static class ListAllProductsEndpoint
     }
 }
 
-
 public static class ListAllProducts
 {
-    // Query: Uma solicitação para buscar a lista de todos os produtos.
-    // Não precisa de parâmetros para uma listagem simples.
-    public record Query() : IRequest<IEnumerable<ProductResponse>>;
+    // A Query agora recebe os parâmetros para filtro e paginação.
+    public record Query(string? Filter, int Page, int PageSize) : IRequest<PagedResult<ProductResponse>>;
 
-    // Handler: Contém a lógica de busca no banco de dados.
-    internal sealed class Handler : IRequestHandler<Query, IEnumerable<ProductResponse>>
+    internal sealed class Handler : IRequestHandler<Query, PagedResult<ProductResponse>>
     {
         private readonly AppDbContext _dbContext;
 
@@ -40,27 +43,42 @@ public static class ListAllProducts
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ProductResponse>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<PagedResult<ProductResponse>> Handle(Query request, CancellationToken cancellationToken)
         {
-            // 1. Acessa a tabela de produtos.
-            var products = await _dbContext.Products
-                .AsNoTracking() // Essencial para performance em consultas de leitura.
-                .OrderBy(p => p.Name) // É uma boa prática ordenar a lista.
-                .Select(p =>
-                    // 2. Mapeia diretamente a entidade para o nosso DTO de resposta.
-                    // Isso é eficiente, pois o EF Core só buscará as colunas necessárias no banco.
-                    new ProductResponse(
-                        p.Id,
-                        p.Sku,
-                        p.Name,
-                        p.Description,
-                        p.QuantityInStock,
-                        p.LastUpdated)
-                )
+            var queryable = _dbContext.Products.AsNoTracking();
+
+            // 1. APLICA O FILTRO (SE EXISTIR)
+            if (!string.IsNullOrWhiteSpace(request.Filter))
+            {
+                var filterLower = request.Filter.ToLower();
+                queryable = queryable.Where(p =>
+                    p.Name.ToLower().Contains(filterLower) ||
+                    p.Sku.ToLower().Contains(filterLower));
+            }
+
+            // 2. OBTÉM A CONTAGEM TOTAL (APÓS O FILTRO) PARA O PAGINADOR
+            var totalCount = await queryable.CountAsync(cancellationToken);
+
+            // 3. APLICA A PAGINAÇÃO
+            var items = await queryable
+                .OrderBy(p => p.Name)
+                .Skip((request.Page - 1) * request.PageSize) // Pula os itens das páginas anteriores
+                .Take(request.PageSize) // Pega apenas a quantidade de itens da página
+                .Select(p => new ProductResponse(
+                    p.Id,
+                    p.Sku,
+                    p.Name,
+                    p.Description,
+                    p.QuantityInStock,
+                    p.LastUpdated))
                 .ToListAsync(cancellationToken);
 
-            // 3. Retorna a lista de produtos.
-            return products;
+            // 4. RETORNA O OBJETO PAGINADO
+            return new PagedResult<ProductResponse>
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
         }
     }
 }

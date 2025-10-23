@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+}
 
 // A interface do Produto pode ficar no mesmo arquivo ou ser movida para um arquivo de "model" depois.
 export interface Product {
@@ -23,8 +29,14 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.apiUrl);
+  getProducts(filter: string, page: number, pageSize: number): Observable<PagedResult<Product>> {
+    // Usa HttpParams para construir a URL da query de forma segura
+    const params = new HttpParams()
+      .set('filter', filter)
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<PagedResult<Product>>(this.apiUrl, { params });
   }
 
   createProduct(productData: CreateProductDto): Observable<Product> {
